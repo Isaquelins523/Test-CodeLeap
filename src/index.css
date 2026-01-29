@@ -1,0 +1,204 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  #root {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+@layer utilities {
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes bounceIn {
+    0% {
+      opacity: 0;
+      transform: scale(0.3);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+    70% {
+      transform: scale(0.9);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -1000px 0;
+    }
+    100% {
+      background-position: 1000px 0;
+    }
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-5px);
+    }
+  }
+
+  @keyframes imageFadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+      filter: blur(4px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+      filter: blur(0);
+    }
+  }
+
+  @keyframes imageZoom {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.02);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  .animate-slideIn {
+    animation: slideIn 0.4s ease-out;
+  }
+
+  .animate-scaleIn {
+    animation: scaleIn 0.3s ease-out;
+  }
+
+  .animate-bounceIn {
+    animation: bounceIn 0.5s ease-out;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
+    background: linear-gradient(
+      to right,
+      #f6f7f8 0%,
+      #edeef1 20%,
+      #f6f7f8 40%,
+      #f6f7f8 100%
+    );
+    background-size: 1000px 100%;
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .animate-imageFadeIn {
+    animation: imageFadeIn 0.6s ease-out;
+  }
+
+  .animate-imageZoom {
+    animation: imageZoom 0.5s ease-out;
+  }
+
+  .image-hover {
+    transition: transform 0.3s ease-out, filter 0.3s ease-out;
+  }
+
+  .image-hover:hover {
+    transform: scale(1.03);
+    filter: brightness(1.05);
+  }
+
+  .transition-smooth {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .hover-lift {
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .focus-ring {
+    transition: all 0.2s ease-out;
+  }
+
+  .focus-ring:focus {
+    outline: none;
+    ring: 2px;
+    ring-color: #7695EC;
+    ring-offset: 2px;
+  }
+}
+
