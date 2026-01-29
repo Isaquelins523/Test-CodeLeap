@@ -120,7 +120,7 @@ src/
 
 ## 🎨 Design
 
-- **Fonte:** Poppins (Google Fonts)
+- **Fonte:** Roboto (Google Fonts)
 - **Cores principais:**
   - Azul: `#7695EC` (botões primários, headers)
   - Verde: `#47B960` (botão de salvar)
