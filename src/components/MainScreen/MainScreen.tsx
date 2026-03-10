@@ -1,17 +1,26 @@
-import { useState } from 'react';
-import { toast } from 'react-toastify';
-import { usePosts } from '../../hooks/usePosts';
-import { useLocalStorage } from '../../hooks/useLocalStorage';
-import type { User } from '../../types/user';
-import type { Post, CreatePostData, UpdatePostData } from '../../types/post';
-import { PostForm } from '../PostForm/PostForm';
-import { PostList } from '../PostList/PostList';
-import { EditPostModal } from '../EditPostModal/EditPostModal';
-import { DeletePostAlert } from '../DeletePostAlert/DeletePostAlert';
+import { useState } from "react";
+import { toast } from "react-toastify";
+import { usePosts } from "../../hooks/usePosts";
+import { useLocalStorage } from "../../hooks/useLocalStorage";
+import type { User } from "../../types/user";
+import type { Post, CreatePostData, UpdatePostData } from "../../types/post";
+import { PostForm } from "../PostForm/PostForm";
+import { PostList } from "../PostList/PostList";
+import { EditPostModal } from "../EditPostModal/EditPostModal";
+import { DeletePostAlert } from "../DeletePostAlert/DeletePostAlert";
 
 export function MainScreen() {
-  const [user, setUser] = useLocalStorage<User | null>('user', null);
-  const { posts, isLoading, error, createPost, updatePost, deletePost, toggleLike, addComment } = usePosts();
+  const [user, setUser] = useLocalStorage<User | null>("user", null);
+  const {
+    posts,
+    isLoading,
+    error,
+    createPost,
+    updatePost,
+    deletePost,
+    toggleLike,
+    addComment,
+  } = usePosts();
   const [editingPost, setEditingPost] = useState<Post | null>(null);
   const [deletingPost, setDeletingPost] = useState<Post | null>(null);
 
@@ -21,7 +30,7 @@ export function MainScreen() {
 
   const handleLogout = () => {
     setUser(null);
-    toast.success('Logged out successfully!');
+    toast.success("Logged out successfully!");
   };
 
   const handleCreatePost = async (postData: CreatePostData) => {
@@ -35,9 +44,9 @@ export function MainScreen() {
   const handleDeletePost = async (postId: number) => {
     try {
       await deletePost(postId);
-      toast.success('Post deleted successfully!');
+      toast.success("Post deleted successfully!");
     } catch (error) {
-      toast.error('Failed to delete post. Please try again.');
+      toast.error("Failed to delete post. Please try again.");
     }
   };
 
@@ -55,7 +64,7 @@ export function MainScreen() {
 
   const handleComment = (postId: number, comment: string) => {
     addComment(postId, comment, user.username);
-    toast.success('Comment added!');
+    toast.success("Comment added!");
   };
 
   return (
@@ -68,7 +77,9 @@ export function MainScreen() {
                 {user.username.charAt(0).toUpperCase()}
               </span>
             </div>
-            <span className="text-base font-semibold text-black">@{user.username}</span>
+            <span className="text-base font-semibold text-black">
+              @{user.username}
+            </span>
           </div>
           <button
             onClick={handleLogout}
@@ -114,4 +125,3 @@ export function MainScreen() {
     </div>
   );
 }
-

@@ -1,6 +1,6 @@
-import { formatRelativeTime } from '../../utils/date';
-import { PostInteractions } from '../PostInteractions/PostInteractions';
-import type { Post } from '../../types/post';
+import { formatRelativeTime } from "../../utils/date";
+import { PostInteractions } from "../PostInteractions/PostInteractions";
+import type { Post } from "../../types/post";
 
 interface PostCardProps {
   post: Post;
@@ -11,13 +11,20 @@ interface PostCardProps {
   onComment?: (postId: number, comment: string) => void;
 }
 
-export function PostCard({ post, currentUsername, onEdit, onDelete, onLike, onComment }: PostCardProps) {
+export function PostCard({
+  post,
+  currentUsername,
+  onEdit,
+  onDelete,
+  onLike,
+  onComment,
+}: PostCardProps) {
   const isOwner = post.username === currentUsername;
 
   const renderContentWithMentions = (text: string) => {
     const parts = text.split(/(@\w+)/g);
     return parts.map((part, index) => {
-      if (part.startsWith('@')) {
+      if (part.startsWith("@")) {
         return (
           <span key={index} className="text-[#7695EC] font-semibold">
             {part}
@@ -102,7 +109,7 @@ export function PostCard({ post, currentUsername, onEdit, onDelete, onLike, onCo
               className="w-full h-auto object-cover image-hover transition-smooth"
               loading="lazy"
               onLoad={(e) => {
-                e.currentTarget.classList.add('animate-imageZoom');
+                e.currentTarget.classList.add("animate-imageZoom");
               }}
             />
           </div>
@@ -112,4 +119,3 @@ export function PostCard({ post, currentUsername, onEdit, onDelete, onLike, onCo
     </div>
   );
 }
-

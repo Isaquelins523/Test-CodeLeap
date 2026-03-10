@@ -54,7 +54,7 @@ Teste técnico para desenvolvedor frontend júnior - Aplicação de rede social 
 ### Performance
 - ✅ Atualização otimista de estado (sem refetch desnecessário)
 - ✅ Cancelamento de requisições ao desmontar componentes
-- ✅ Loading states granulares por ação
+- ✅ Loading global simples para ações de post
 - ✅ Lazy loading de imagens
 
 ## 🛠️ Tecnologias
@@ -63,6 +63,7 @@ Teste técnico para desenvolvedor frontend júnior - Aplicação de rede social 
 - **TypeScript** - Superset JavaScript com tipagem estática
 - **Vite** - Build tool e dev server rápido
 - **Tailwind CSS** - Framework CSS utility-first
+- **Axios** - Cliente HTTP para integração com a API
 - **Zod** - Validação de schemas TypeScript-first
 - **React Toastify** - Notificações toast elegantes
 - **date-fns** - Manipulação de datas
@@ -75,7 +76,7 @@ Teste técnico para desenvolvedor frontend júnior - Aplicação de rede social 
 git clone https://github.com/Isaquelins523/Test-CodeLeap.git
 
 # Entre no diretório
-cd CodeLeap-test
+cd Test-CodeLeap
 
 # Instale as dependências
 npm install
@@ -91,31 +92,33 @@ npm run build
 
 ```
 src/
-├── components/          # Componentes React
-│   ├── SignupModal/    # Modal de cadastro
-│   ├── MainScreen/      # Tela principal
-│   ├── PostForm/        # Formulário de criação de posts
-│   ├── PostList/        # Lista de posts
-│   ├── PostCard/        # Card individual de post
-│   ├── PostInteractions/# Interações (likes, comentários)
-│   ├── EditPostModal/   # Modal de edição
-│   └── DeletePostAlert/ # Alerta de confirmação de exclusão
-├── hooks/               # Custom hooks
-│   ├── useLocalStorage/ # Hook para localStorage
-│   └── usePosts/        # Hook para gerenciar posts
-├── utils/               # Funções utilitárias
-│   ├── date.ts          # Formatação de datas
-│   ├── mentions.ts      # Detecção de menções
-│   ├── imageStorage.ts  # Gerenciamento de imagens no localStorage
+├── components/              # Componentes React
+│   ├── SignupModal/         # Modal de cadastro
+│   ├── MainScreen/          # Tela principal
+│   ├── PostForm/            # Formulário de criação de posts
+│   ├── PostList/            # Lista de posts
+│   ├── PostCard/            # Card individual de post
+│   ├── PostInteractions/    # Interações (likes, comentários)
+│   ├── EditPostModal/       # Modal de edição
+│   └── DeletePostAlert/     # Alerta de confirmação de exclusão
+├── hooks/                   # Custom hooks
+│   ├── useLocalStorage.ts   # Hook para localStorage
+│   └── usePosts.ts          # Hook para gerenciar posts (estado/regra de UI)
+├── services/                # Camada de serviços de API
+│   └── postService.ts       # Funções de CRUD de posts com Axios
+├── utils/                   # Funções utilitárias
+│   ├── date.ts              # Formatação de datas
+│   ├── mentions.ts          # Detecção de menções
+│   ├── imageStorage.ts      # Gerenciamento de imagens no localStorage
 │   └── postInteractionsStorage.ts # Gerenciamento de likes/comentários
-├── types/               # Definições TypeScript
-│   ├── user.ts          # Tipo de usuário
-│   └── post.ts          # Tipo de post
-├── schemas/             # Schemas de validação Zod
-│   ├── signup.schema.ts # Validação de cadastro
-│   └── post.schema.ts   # Validação de posts
-└── config/              # Configurações
-    └── api.ts           # Configuração da API
+├── types/                   # Definições TypeScript
+│   ├── user.ts              # Tipo de usuário
+│   └── post.ts              # Tipo de post
+├── schemas/                 # Schemas de validação Zod
+│   ├── signup.schema.ts     # Validação de cadastro
+│   └── post.schema.ts       # Validação de posts
+└── config/                  # Configurações
+    └── api.ts               # Configuração da API (base URL, trailing slash)
 ```
 
 ## 🎨 Design
@@ -138,10 +141,11 @@ src/
 ### Gerenciamento de Estado
 - Custom hooks para lógica reutilizável
 - Estado local otimizado
-- Sincronização com localStorage
+- Persistência com localStorage via hook dedicado
 
 ### API Integration
-- CRUD completo de posts
+- CRUD completo de posts via camada de serviço (`postService`)
+- Cliente HTTP com Axios
 - Tratamento de erros
 - Cancelamento de requisições
 - URLs normalizadas com trailing slash (compatível com Django)

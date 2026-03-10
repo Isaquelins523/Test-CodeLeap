@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { buildApiUrl } from '../config/api';
 import type { Post, CreatePostData, UpdatePostData, Comment } from '../types/post';
 import { savePostImage, getPostImage, removePostImage, getAllPostImages } from '../utils/imageStorage';
 import {
@@ -10,12 +9,16 @@ import {
   removePostComments,
   getAllPostComments,
 } from '../utils/postInteractionsStorage';
-
-type LoadingAction = 'fetch' | 'create' | 'update' | 'delete' | null;
+import {
+  fetchPostsApi,
+  createPostApi,
+  updatePostApi,
+  deletePostApi,
+} from '../services/postService';
 
 export function usePosts() {
   const [posts, setPosts] = useState<Post[]>([]);
-  const [loadingAction, setLoadingAction] = useState<LoadingAction>('fetch');
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -27,17 +30,11 @@ export function usePosts() {
     abortControllerRef.current = new AbortController();
     const signal = abortControllerRef.current.signal;
 
-    setLoadingAction('fetch');
+    setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${buildApiUrl()}?limit=1000&offset=0`, { signal });
-      
-      if (!response.ok) {
-        throw new Error(`Failed to fetch posts: ${response.status} ${response.statusText}`);
-      }
-      
-      const data = await response.json();
-      
+      const data = await fetchPostsApi(1000, 0);
+
       if (!data.results || !Array.isArray(data.results)) {
         console.error('Unexpected API response structure:', data);
         setPosts([]);
@@ -85,27 +82,15 @@ export function usePosts() {
       setPosts([]);
     } finally {
       if (!signal.aborted) {
-        setLoadingAction(null);
+        setIsLoading(false);
       }
     }
   }, []);
 
   const createPost = async (postData: CreatePostData): Promise<Post | null> => {
-    setLoadingAction('create');
+    setIsLoading(true);
     try {
-      const response = await fetch(buildApiUrl(), {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(postData),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to create post');
-      }
-
-      const newPost = await response.json();
+      const newPost = await createPostApi(postData);
       
       if (postData.imageUrl) {
         savePostImage(newPost.id, postData.imageUrl);
@@ -127,26 +112,14 @@ export function usePosts() {
       console.error('Error creating post:', err);
       throw err;
     } finally {
-      setLoadingAction(null);
+      setIsLoading(false);
     }
   };
 
   const updatePost = async (postId: number, postData: UpdatePostData): Promise<Post | null> => {
-    setLoadingAction('update');
+    setIsLoading(true);
     try {
-      const response = await fetch(buildApiUrl(`${postId}/`), {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(postData),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to update post');
-      }
-
-      const updatedPost = await response.json();
+      const updatedPost = await updatePostApi(postId, postData);
       
       let finalImageUrl: string | undefined;
       if (postData.imageUrl !== undefined) {
@@ -173,20 +146,14 @@ export function usePosts() {
       console.error('Error updating post:', err);
       throw err;
     } finally {
-      setLoadingAction(null);
+      setIsLoading(false);
     }
   };
 
   const deletePost = async (postId: number): Promise<void> => {
-    setLoadingAction('delete');
+    setIsLoading(true);
     try {
-      const response = await fetch(buildApiUrl(`${postId}/`), {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete post');
-      }
+      await deletePostApi(postId);
 
       removePostImage(postId);
       removePostLikes(postId);
@@ -197,7 +164,7 @@ export function usePosts() {
       console.error('Error deleting post:', err);
       throw err;
     } finally {
-      setLoadingAction(null);
+      setIsLoading(false);
     }
   };
 
@@ -257,8 +224,7 @@ export function usePosts() {
 
   return {
     posts,
-    isLoading: loadingAction === 'fetch',
-    loadingAction,
+    isLoading,
     error,
     fetchPosts,
     createPost,
